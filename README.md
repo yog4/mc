@@ -1,0 +1,2 @@
+# Example JS Azure function
+
