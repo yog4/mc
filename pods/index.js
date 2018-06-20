@@ -6,17 +6,16 @@ module.exports = function (context, req) {
   var k8sApi = k8s.Config.fromFile("D:\\home\\site\\wwwroot\\servers\\t3cluster-config");
 
   // Query
-  k8sApi.listServiceForAllNamespaces()
+  k8sApi.listNamespacedPod('default')
     .then((res) => {
       context.log('SUCCESS');
       // Parse
       var list = []
       res.body.items.forEach(function(entry) {
-        context.log(entry.metadata.name + "\t" + entry.status.loadBalancer.ingress + "\t" + entry.spec.ports)
+        context.log(entry.metadata.name + "\t" + entry.status.phase)
         list.push({
           name: entry.metadata.name,
-          loadBalancer: entry.status.loadBalancer.ingress,
-          ports: entry.spec.ports
+          status: entry.status.phase
         });
       })
       // Set the Response

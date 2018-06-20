@@ -3,12 +3,19 @@ module.exports = function (context, req) {
 
   const k8s = require('@kubernetes/client-node');
 
-  var k8sApi = k8s.Config.fromFile("D:\\home\\site\\wwwroot\\servers\\t3cluster-config");
+  //var k8sApi = k8s.Config.fromFile("D:\\home\\site\\wwwroot\\servers\\t3cluster-config");
+var k8sApi = k8s.Config.defaultClient();
+  // kubectl patch sts azure-minecraft-statefulset -p '{"spec":{"replicas":3}}'
 
   // Query
-  k8sApi.listServiceForAllNamespaces()
+  // public patchNamespacedStatefulSet (name: string, namespace: string, body: any, pretty?: string) : Promise<{ response: http.ClientResponse; body: V1StatefulSet;  }> {
+  //k8sApi.listServiceForAllNamespaces()
+  k8sApi.patchNamespacedStatefulSetScale("azure-minecraft-statefulset", "default", "3", "true")
+  //k8sApi.patchNamespacedResourceQuotaStatus("azure-minecraft-statefulset")
     .then((res) => {
       context.log('SUCCESS');
+      context.log(res);
+      context.log(res.body);
       // Parse
       var list = []
       res.body.items.forEach(function(entry) {
